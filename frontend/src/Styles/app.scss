@@ -1,0 +1,68 @@
+.body-light {
+  background-image: url(..//Images/white-wallpaper.jpg);
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+}
+
+.body-dark {
+  background-image: url(..//Images/black-wallpaper.jpg);
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+}
+
+.logo_img {
+  background-image: url(..//Images/Logo.png);
+  background-size: cover;
+}
+
+.login_img {
+  background-image: url("../Images/login.png");
+  background-size: cover;
+}
+
+.body-light a {
+  text-decoration: none;
+  color: rgb(8, 8, 8);
+}
+
+.body-dark a {
+  text-decoration: none;
+  color: white;
+}
+
+a.active {
+  color: #ff5f1f;
+}
+
+// for arrows
+div.swiper-button-prev,
+div.swiper-button-next {
+  color: #ff5f1f;
+}
+
+.swiper-pagination-progressbar-fill {
+  background-color: #ff5f1f !important;
+  border-radius: 5px;
+}
+
+.swiper-pagination-progressbar {
+  background-color: black;
+  border: 1px solid black;
+}
+
+span.swiper-pagination-bullet {
+  background-color: #ff5f1f;
+}
+
+.swiper-container {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  left: 10%;
+  top: 50%;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+}

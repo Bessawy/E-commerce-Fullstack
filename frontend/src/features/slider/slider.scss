@@ -1,0 +1,14 @@
+.Slider{
+    height: 100%;
+    display: flex;
+    justify-content: "center";
+    align-items: "center";
+    background-size: cover;
+  };
+
+  .Slider__rightArrow{   
+    margin-left: auto !important;
+  }
+
+  .Slider__leftArrow{
+  }

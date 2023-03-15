@@ -1,0 +1,1 @@
+export type navMenuType = {id: number, state: string, action: ()=>void} 
