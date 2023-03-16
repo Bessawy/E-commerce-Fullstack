@@ -30,7 +30,7 @@ public class UserService : IUserService
             return null;
 
         if(!await _userManager.CheckPasswordAsync(user, request.Password))
-            return null;
+            throw new UnauthorizedAccessException();
             
         var role = await _userManager.GetRolesAsync(user);
         user.Role = role[0];

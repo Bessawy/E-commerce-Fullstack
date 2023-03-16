@@ -36,11 +36,18 @@ public class UserController : ApiControllerBase
     [HttpPost("signin")]
     public async Task<IActionResult> SignIn(UserSignInRequestDTO request)
     {
-        var response = await _service.SignInAsync(request);
-        if(response is null)
-            return Unauthorized();
-        else
-            return Ok(response);
+        try
+        {
+            var response = await _service.SignInAsync(request);
+            if(response is null)
+                return NotFound("User email not found!");
+            else
+                return Ok(response);
+        }
+        catch
+        {
+            return Unauthorized("Password is not correct!");
+        }
     }
 
     [AllowAnonymous]
