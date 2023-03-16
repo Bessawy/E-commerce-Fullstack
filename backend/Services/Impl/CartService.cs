@@ -16,11 +16,11 @@ public class CartService : ICartService
         _service = service;
     }
     
-    public async Task<ICollection<CartDTO>> GetItemsInCartAsync(string userId)
+    public async Task<ICollection<CartDTO>?> GetItemsInCartAsync(string userId)
     {
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return new List<CartDTO>();
+            return null;
 
         await _dbContext.Entry(user).Collection(u => u.Carts).LoadAsync();
 
