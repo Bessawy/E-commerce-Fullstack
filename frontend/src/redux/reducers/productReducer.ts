@@ -12,7 +12,7 @@ const intialstate: ProductType[] = [];
 export const fetchAllProduct = createAsyncThunk("fetchProducts", async () => {
   try {
     const response = await axios.get(
-      "https://api.escuelajs.co/api/v1/products"
+      "https://localhost:7191/api/v1/products"
     );
     const data: ProductType[]|Error = await response.data;
     return data;
@@ -26,7 +26,7 @@ export const fetchSingleProduct = createAsyncThunk(
   async (id: number) => {
     try {
       const response = await axios.get(
-        "https://api.escuelajs.co/api/v1/products/" + id
+        "https://localhost:7191/api/v1/products/" + id
       );
       const data = await response.data;
       return data;

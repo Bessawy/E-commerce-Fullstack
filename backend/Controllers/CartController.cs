@@ -65,7 +65,7 @@ public class CartController : ApiControllerBase
 
         var items = await _service.GetItemsInCartAsync(userId);
         if(items is null)
-            return NotFound("User not found!");
+            return NotFound();
         return Ok(items);
     }
 }

@@ -13,6 +13,7 @@ import ProtectAdmin from "../Pages/userlog/ProtectedAdmin";
 import ProtectLogin from "../Pages/userlog/ProtectedLogin";
 import Register from "../Pages/userlog/Register";
 import Users from "../Pages/userlog/Users";
+import ChangePassword from "../Pages/userlog/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectLogin>
             <Profile />
+          </ProtectLogin>
+        ),
+      },
+      {
+        path: "profile/password",
+        element: (
+          <ProtectLogin>
+            <ChangePassword />
           </ProtectLogin>
         ),
       },

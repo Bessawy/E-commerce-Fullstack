@@ -6,6 +6,7 @@ using Ecommerce.Db;
 using Ecommerce.Models;
 using Ecommerce.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Certificate;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ builder.Services.AddControllers()
 // Add databases context
 builder.Services.AddDbContext<AppDbContext>();
 
-// Add Identity
+// Add Identity and configure options
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     {
         options.Password.RequireDigit = false;
@@ -68,6 +69,11 @@ builder.Services.AddAuthentication()
                 builder.Configuration["Jwt_admin:Secret"])), 
     };
 });
+
+// Add Cetificates for Browsers to trust requests.
+builder.Services.AddAuthentication(
+        CertificateAuthenticationDefaults.AuthenticationScheme)
+    .AddCertificate();
 
 //Add authorization Policies
 builder.Services.AddAuthorization(options =>

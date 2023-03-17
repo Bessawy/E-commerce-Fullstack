@@ -89,7 +89,7 @@ public class UserService : IUserService
     public async Task<bool> UpdatePasswordAsync(ChangePasswordDTO request, User user)
     {
         var result = await _userManager.ChangePasswordAsync(user, 
-            request.NewPassword, request.OldPassword);
+            request.OldPassword, request.NewPassword);
         return result.Succeeded;
     }
 }  

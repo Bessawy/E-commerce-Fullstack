@@ -25,3 +25,8 @@ export interface UserOptionalType{
     password?: string
 }
 
+export interface UserPasswordType{
+    oldpassword : string,
+    newpassword : string
+}
+

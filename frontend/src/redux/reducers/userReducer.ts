@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { CreateUserType, UserType } from "../../Types/user";
+import { CreateUserType, UserPasswordType, UserType } from "../../Types/user";
 
 export const userinttialstate: UserType = {
   id: 0,
@@ -16,12 +16,18 @@ export const editUserServer = createAsyncThunk(
   "editUserServer",
   async (user: UserType) => {
     try {
-      const response = await axios.put(
-        "https://api.escuelajs.co/api/v1/users/" + user.id,
+      const access_token = localStorage.getItem("JWT");
+      const response = await axios.post(
+        "https://localhost:7191/api/v1/users/profile/info",
         {
           email: user.email,
-          password: user.password,
           name: user.name,
+          avatar: user.avatar,
+          },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          }
         }
       );
       const data: UserType = response.data;
@@ -32,14 +38,40 @@ export const editUserServer = createAsyncThunk(
   }
 );
 
+export const changePasswordServer = createAsyncThunk(
+  "changePasswordServer",
+  async (passwords: UserPasswordType) => {
+    try {
+      const access_token = localStorage.getItem("JWT");
+      const response = await axios.post(
+        "https://localhost:7191/api/v1/users/profile/password",
+        {
+          oldpassword: passwords.oldpassword,
+          newpassword: passwords.newpassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          }
+        }
+      );
+      const data = response.data;
+      return data
+    } catch (e) {
+      throw new Error("Couldnot change password");
+    }
+  }
+);
+
 export const createUser = createAsyncThunk(
   "createUser",
   async (user: CreateUserType) => {
     try {
       const response = await axios.post(
-        "https://api.escuelajs.co/api/v1/users/",
+        "https://localhost:7191/api/v1/users/signup",
         user
       );
+
       const data: UserType|Error = response.data;
       return data;
     } catch (e) {
@@ -57,7 +89,7 @@ export const JWTLogin = createAsyncThunk("tokenLogin", async () => {
     }
 
     const userResponse = await axios.get(
-      "https://api.escuelajs.co/api/v1/auth/profile",
+      "https://localhost:7191/api/v1/users/profile",
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -76,11 +108,11 @@ export const UserLogin = createAsyncThunk(
   async (user: { email: string; password: string }, { dispatch }) => {
     try {
       const response = await axios.post(
-        "https://api.escuelajs.co/api/v1/auth/login",
+        "https://localhost:7191/api/v1/users/signin",
         user
       );
       const data = await response.data;
-      localStorage.setItem("JWT", data.access_token);
+      localStorage.setItem("JWT", data.token);
       await dispatch(JWTLogin());
     } catch (e) {
       throw new Error("Login failed");

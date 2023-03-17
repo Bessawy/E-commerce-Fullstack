@@ -44,9 +44,9 @@ public class UserController : ApiControllerBase
             else
                 return Ok(response);
         }
-        catch
+        catch(UnauthorizedAccessException e)
         {
-            return Unauthorized("Password is not correct!");
+            return Unauthorized($"Password is not correct: ({e.Message})!");
         }
     }
 
@@ -69,11 +69,11 @@ public class UserController : ApiControllerBase
         
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return Unauthorized();
+            return NotFound();
         return Ok(UserDTO.FromUser(user!));
     }
 
-    [HttpPut("profile/info")]
+    [HttpPost("profile/info")]
     public async Task<ActionResult<UserDTO?>> UpdateCurrentUserInfo(UserDTO request)
     {
         var userId = GetUserIdFromToken();
@@ -82,7 +82,7 @@ public class UserController : ApiControllerBase
         
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return Unauthorized();
+            return NotFound();
 
         var updateUser = await _service.UpdateUserInfoAsync(request, user);
         if(updateUser is null)
@@ -90,7 +90,7 @@ public class UserController : ApiControllerBase
         return Ok(UserDTO.FromUser(updateUser));
     }
 
-    [HttpPut("profile/password")]
+    [HttpPost("profile/password")]
     public async Task<IActionResult> UpdateCurrentUserPassowrd(ChangePasswordDTO request)
     {
         var userId = GetUserIdFromToken();
@@ -99,7 +99,7 @@ public class UserController : ApiControllerBase
         
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return Unauthorized();
+            return NotFound();
 
         var updateUser = await _service.UpdatePasswordAsync(request, user);
         if(updateUser)

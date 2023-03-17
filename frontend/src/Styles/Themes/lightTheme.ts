@@ -6,6 +6,7 @@ export const lightTheme = createTheme({
   },
 
   components: {
+    
     MuiButton: {
       variants: [
         {
