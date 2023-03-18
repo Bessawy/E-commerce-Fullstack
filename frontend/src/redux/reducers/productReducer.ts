@@ -41,7 +41,7 @@ export const addProductServer = createAsyncThunk(
   async (product: ProductCreateType) => {
     try {
       const response: AxiosResponse<ProductType, ProductType> =
-        await axios.post("https://api.escuelajs.co/api/v1/products/", {
+        await axios.post("https://localhost:7191/api/v1/products", {
           title: product.title,
           price: product.price,
           description: product.description,
@@ -60,12 +60,18 @@ export const updateItemServer = createAsyncThunk(
   "modifyProductonServer",
   async (Item: ProductType, { dispatch }) => {
     try {
+      const access_token = localStorage.getItem("JWT");
       const response = await axios.put(
-        "https://api.escuelajs.co/api/v1/products/" + Item.id,
+        "https://localhost:7191/api/v1/products/" + Item.id,
         {
           title: Item.title,
           price: Item.price,
           description: Item.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          }
         }
       );
       const data: ProductType = await response.data;
@@ -81,9 +87,14 @@ export const deleteItemServer = createAsyncThunk(
   "deleteProduct",
   async (id: number, { dispatch }) => {
     try {
+      const access_token = localStorage.getItem("JWT");
       const response = await axios.delete(
-        "https://api.escuelajs.co/api/v1/products/" + id
-      );
+        "https://localhost:7191/api/v1/products/" + id,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        }
+      });
       dispatch(deleteItem(id));
       return response.data;
     } catch (e: any) {
