@@ -55,7 +55,7 @@ public class ProductController : CrudController<Product, ProductDTO>
 
     [AllowAnonymous]
     [HttpGet("{id}/reviews")]
-    public async Task<ActionResult<ICollection<Product>>> GetReview(int id,
+    public async Task<ActionResult<ICollection<ReviewDTO>>> GetReview(int id,
         [FromQuery] int offset = 0, 
         [FromQuery] int limit = 100)
     {
