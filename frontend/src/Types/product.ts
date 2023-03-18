@@ -10,6 +10,8 @@ export interface ProductType {
   price: number;
   description: string;
   category: CategoryType;
+  rating?: number;
+  numberOfReviews?: number;
   images: string[];
 }
 

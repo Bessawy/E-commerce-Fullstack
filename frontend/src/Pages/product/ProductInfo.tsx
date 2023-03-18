@@ -27,6 +27,7 @@ import {
   deleteItemServer,
   updateItemServer,
 } from "../../redux/reducers/productReducer";
+import { FlexBox } from "../../Styles/Themes/styledComp";
 
 const ProductInfo = () => {
   const stateObj = useLocation();
@@ -54,7 +55,7 @@ const ProductInfo = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
@@ -72,7 +73,6 @@ const ProductInfo = () => {
             pagination={{ clickable: true }}
             grabCursor={true}
             effect="cube"
-
             centeredSlides
           >
             {product.images.map((item, index) => {
@@ -139,6 +139,13 @@ const ProductInfo = () => {
               </GridItem>
             </Grid>
           </Grid>
+          <Grid sx={{marginTop: 2}}>
+            <Grid item xs={12}> 
+            <GridItem>
+            Reviews
+            </GridItem>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -156,9 +163,7 @@ const ProductInfo = () => {
                 {product.title}
               </Typography>
               <Button
-                onClick={() =>
-                  editExp ? seteditExp(false) : seteditExp(true)
-                }
+                onClick={() => (editExp ? seteditExp(false) : seteditExp(true))}
                 sx={{ marginLeft: "auto" }}
               >
                 <ExpandMoreIcon fontSize="small" />

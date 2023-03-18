@@ -5,6 +5,7 @@ import {
   Grid,
   IconButton,
   Paper,
+  Rating,
   Typography,
 } from "@mui/material";
 import EuroIcon from "@mui/icons-material/Euro";
@@ -15,6 +16,7 @@ import { ProductType } from "../../Types/product";
 import { Item } from "../../utils/product_utils";
 import { useAppDispatch } from "../../reduxhook/hooks";
 import { addtoCart } from "../../redux/reducers/cartReducer";
+import React from "react";
 
 const Image = (props: { img: string }) => {
   return (
@@ -34,7 +36,9 @@ const Image = (props: { img: string }) => {
 
 const ProductItem = (props: { Item: ProductType }) => {
   const dispatch = useAppDispatch();
+  const [value, setValue] = React.useState<number | null>(0);
   const navigate = useNavigate();
+
   return (
     <Paper sx={{ width: 320, marginTop: 1 }} elevation={24}>
       <Typography align="center" padding={1}>
@@ -51,14 +55,20 @@ const ProductItem = (props: { Item: ProductType }) => {
         >
           <Image img={props.Item.images[0]} />
         </Grid>
-        <Grid item xs={12} sx={{ height: 100, marginBottom: 1 }}>
+        <Grid item xs={12} sx={{Height: 50, marginBottom: 1 }}>
           <Item>
             <Typography variant="inherit">{props.Item.description}</Typography>
+          </Item>
+          <Item>
+            <Typography variant="inherit">
+              {props.Item.numberOfReviews + " reviews"}
+            </Typography>
+            <Rating name="read-only" value={props.Item.rating} readOnly />
           </Item>
         </Grid>
         <Grid
           item
-          xs={3}
+          xs={4}
           justifyContent="center"
           alignItems="center"
           display="flex"
@@ -66,7 +76,7 @@ const ProductItem = (props: { Item: ProductType }) => {
           <Item>
             <Typography
               variant="inherit"
-              sx={{ fontSize: 14, fontWeight: 700 }}
+              sx={{ fontSize: 14, fontWeight: 700 , whiteSpace: "now"}}
               color="secondary"
             >
               {props.Item.price} <EuroIcon sx={{ fontSize: 12 }} />
@@ -92,7 +102,7 @@ const ProductItem = (props: { Item: ProductType }) => {
         </Grid>
         <Grid
           item
-          xs={3}
+          xs={2}
           justifyContent="center"
           alignItems="center"
           display="flex"
