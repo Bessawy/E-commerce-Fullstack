@@ -40,6 +40,7 @@ export const addProductServer = createAsyncThunk(
   "addProductToBackendServer",
   async (product: ProductCreateType) => {
     try {
+      const access_token = localStorage.getItem("JWT");
       const response: AxiosResponse<ProductType, ProductType> =
         await axios.post("https://localhost:7191/api/v1/products", {
           title: product.title,
@@ -47,6 +48,11 @@ export const addProductServer = createAsyncThunk(
           description: product.description,
           categoryId: product.categoryId,
           images: product.images,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          }
         });
       const data: ProductType|Error = response.data;
       return data;
