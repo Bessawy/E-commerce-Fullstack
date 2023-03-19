@@ -32,9 +32,12 @@ import {
 import { FlexBox } from "../../Styles/Themes/styledComp";
 import {
   addReviewToServer,
+  deleteUserReviewServer,
+  emptyContainer,
+  getAllReviewsFromServer,
   getUserReviewServer,
 } from "../../redux/reducers/reviewReducer";
-import { reviewType } from "../../Types/review";
+import { getReviewsType, reviewType } from "../../Types/review";
 import { Reviews } from "@mui/icons-material";
 
 const ProductInfo = () => {
@@ -49,10 +52,11 @@ const ProductInfo = () => {
   const [deleteExp, setDeleteExp] = React.useState<true | false>(false);
   const [editExp, seteditExp] = React.useState<true | false>(false);
   const [myReview, SetMyReview] = React.useState<reviewType | null>(null);
+  const [counter, SetCounter] = React.useState<number>(0);
+  var reviewsCounter = 0;
 
   const user = useAppSelector((state) => state.userReducer);
   const reviews = useAppSelector((state) => state.reviewReducer);
-
   const deleteProduct = () => {
     dispatch(deleteItemServer(product.id));
     navigate("/products");
@@ -73,6 +77,17 @@ const ProductInfo = () => {
     });
   };
 
+  const addreviewsHandler = () => {
+    const req: getReviewsType = {
+      productid: product.id,
+      offset: 0 + 5 * counter,
+      limit: 5 + 5 * counter,
+    };
+    dispatch(getAllReviewsFromServer(req)).then((res) => {
+      SetCounter(counter + 1)
+    });
+  };
+
   const addReviewHandler = () => {
     const n: number = value ? value : 0;
     const review: reviewType = {
@@ -80,15 +95,26 @@ const ProductInfo = () => {
       comment: comment,
       productid: product.id,
     };
-    dispatch(addReviewToServer(review)).then(res => SetMyReview(review));
+    dispatch(addReviewToServer(review)).then((res) => SetMyReview(review));
+  };
+
+  const removeReviewHandler = () => {
+    dispatch(deleteUserReviewServer(product.id)).then((res) =>
+      SetMyReview(null)
+    );
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [pathname]);
+
+  useEffect(() => {
+    dispatch(emptyContainer());
     dispatch(getUserReviewServer(product.id))
       .then((res) => SetMyReview(res.payload as reviewType))
       .catch((res) => SetMyReview(null));
-  }, [pathname]);
+    addreviewsHandler();
+  }, []);
 
   return (
     <Box marginTop={20} marginLeft={4} marginRight={4}>
@@ -166,14 +192,14 @@ const ProductInfo = () => {
               </GridItem>
             </Grid>
           </Grid>
-
           <Grid item xs={12}>
             <GridItem>
-            <Typography variant="h6">{product.numberOfReviews + " reviews"}</Typography>
-            <Rating name="read-only" value={product.rating} readOnly />
+              <Typography variant="h6">
+                {product.numberOfReviews + " reviews"}
+              </Typography>
+              <Rating name="read-only" value={product.rating} readOnly />
             </GridItem>
           </Grid>
-
           {myReview && (
             <Grid item xs={12}>
               <GridItem>
@@ -189,7 +215,6 @@ const ProductInfo = () => {
               </FlexBox>
             </Grid>
           )}
-
           <Grid item xs={12}>
             {!myReview && (
               <FlexBox>
@@ -217,7 +242,7 @@ const ProductInfo = () => {
                 Add Review
               </Button>
               <Button
-                onClick={() => (editExp ? seteditExp(false) : seteditExp(true))}
+                onClick={() => removeReviewHandler()}
                 disabled={myReview ? false : true}
               >
                 Delete Review
@@ -225,6 +250,39 @@ const ProductInfo = () => {
             </FlexBox>
           </Grid>
         </Grid>
+        <Grid item xs={12} sx={{ marginRight: 5, marginLeft: 5 }}>
+          <GridItem>Reviews</GridItem>
+        </Grid>
+        {reviews.map((e, i) => {
+          return (
+            <Grid item key={i} xs={12}>
+              <Grid container sx={{ marginRight: 5, marginLeft: 5 }}>
+                <Grid item xs={3}>
+                  <GridItem>{"Username( " + e.userName + " )"}</GridItem>
+                </Grid>
+                <Grid item xs={4}>
+                  <FlexBox>
+                    <Rating name="read-only" value={e.rate} readOnly />
+                  </FlexBox>
+                </Grid>
+                <Grid item xs={4}>
+                  {e.comment}
+                </Grid>
+              </Grid>
+            </Grid>
+          );
+        })}
+      </Grid>
+      <Grid item xs={12} sx={{ marginTop: 5}}>
+        <FlexBox>
+          <Button
+            disabled={counter*5 > reviews.length ? true : false}
+            onClick = {()=> addreviewsHandler()}
+          >
+            {" "}
+            Add Reviews{" "}
+          </Button>
+        </FlexBox>
       </Grid>
 
       {user.role === "admin" && (

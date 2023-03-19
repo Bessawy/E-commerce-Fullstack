@@ -1,6 +1,12 @@
 export interface reviewType {
-    username?: string, 
-    productid: number,
-    comment: string,
-    rate: number
-    } 
+  userName?: string;
+  productid: number;
+  comment: string;
+  rate: number;
+}
+
+export interface getReviewsType {
+  offset: number;
+  limit: number;
+  productid: number;
+}

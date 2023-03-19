@@ -8,10 +8,10 @@ import './Styles/app.scss'
 const container = document.getElementById("root")!;
 const root = createRoot(container);
 
+//   <React.StrictMode> render components twice on dev server!
+
 root.render(
-    <React.StrictMode>
       <Provider store={store}>
         <App />
       </Provider>
-    </React.StrictMode>
 );
