@@ -6,6 +6,8 @@ import {
   Button,
   Divider,
   Grid,
+  Rating,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -28,16 +30,28 @@ import {
   updateItemServer,
 } from "../../redux/reducers/productReducer";
 import { FlexBox } from "../../Styles/Themes/styledComp";
+import {
+  addReviewToServer,
+  getUserReviewServer,
+} from "../../redux/reducers/reviewReducer";
+import { reviewType } from "../../Types/review";
+import { Reviews } from "@mui/icons-material";
 
 const ProductInfo = () => {
-  const stateObj = useLocation();
-  const [product, setProduct] = useState<ProductType>(stateObj.state);
-  const [deleteExp, setDeleteExp] = React.useState<true | false>(false);
-  const [editExp, seteditExp] = React.useState<true | false>(false);
-  const navigate = useNavigate();
-  const user = useAppSelector((state) => state.userReducer);
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const stateObj = useLocation();
+
+  const [product, setProduct] = useState<ProductType>(stateObj.state);
+  const [comment, setComment] = useState<string>("");
+  const [value, setValue] = useState<number | null>(0);
+  const [deleteExp, setDeleteExp] = React.useState<true | false>(false);
+  const [editExp, seteditExp] = React.useState<true | false>(false);
+  const [myReview, SetMyReview] = React.useState<reviewType | null>(null);
+
+  const user = useAppSelector((state) => state.userReducer);
+  const reviews = useAppSelector((state) => state.reviewReducer);
 
   const deleteProduct = () => {
     dispatch(deleteItemServer(product.id));
@@ -59,8 +73,21 @@ const ProductInfo = () => {
     });
   };
 
+  const addReviewHandler = () => {
+    const n: number = value ? value : 0;
+    const review: reviewType = {
+      rate: n,
+      comment: comment,
+      productid: product.id,
+    };
+    dispatch(addReviewToServer(review)).then(res => SetMyReview(review));
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    dispatch(getUserReviewServer(product.id))
+      .then((res) => SetMyReview(res.payload as reviewType))
+      .catch((res) => SetMyReview(null));
   }, [pathname]);
 
   return (
@@ -139,12 +166,63 @@ const ProductInfo = () => {
               </GridItem>
             </Grid>
           </Grid>
-          <Grid sx={{marginTop: 2}}>
-            <Grid item xs={12}> 
+
+          <Grid item xs={12}>
             <GridItem>
-            Reviews
+            <Typography variant="h6">{product.numberOfReviews + " reviews"}</Typography>
+            <Rating name="read-only" value={product.rating} readOnly />
             </GridItem>
+          </Grid>
+
+          {myReview && (
+            <Grid item xs={12}>
+              <GridItem>
+                <Typography variant="h6">My Review</Typography>
+              </GridItem>
+              <FlexBox sx={{ margin: 2 }}>
+                <Typography
+                  sx={{ fontSize: 20, fontWeight: 400, marginRight: 2 }}
+                >
+                  {myReview.comment}
+                </Typography>
+                <Rating name="read-only" value={myReview.rate} readOnly />
+              </FlexBox>
             </Grid>
+          )}
+
+          <Grid item xs={12}>
+            {!myReview && (
+              <FlexBox>
+                <TextField
+                  variant="standard"
+                  label="comment"
+                  value={comment}
+                  sx={{ m: 3, width: "40%" }}
+                  onChange={(e) => setComment(e.target.value)}
+                ></TextField>
+                <Rating
+                  name="simple-controlled"
+                  value={value}
+                  onChange={(event, newValue) => {
+                    setValue(newValue);
+                  }}
+                />
+              </FlexBox>
+            )}
+            <FlexBox>
+              <Button
+                onClick={() => addReviewHandler()}
+                disabled={myReview ? true : false}
+              >
+                Add Review
+              </Button>
+              <Button
+                onClick={() => (editExp ? seteditExp(false) : seteditExp(true))}
+                disabled={myReview ? false : true}
+              >
+                Delete Review
+              </Button>
+            </FlexBox>
           </Grid>
         </Grid>
       </Grid>

@@ -40,11 +40,30 @@ public class ReviewController : ApiControllerBase
         if(userId is null)
             return Unauthorized();
 
-        var review = await _service.AddReviewAsync(request, userId);
-        if(review is null)
-            return BadRequest();
+        try
+        {
+            var review = await _service.AddReviewAsync(request, userId);
+            if(review is null)
+                return BadRequest();
+            return Ok(review);
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Review>> GetUserReview(int id)
+    {
+        string? userId = GetUserIdFromToken();
+        if(userId is null)
+            return Unauthorized();
+
+        var review = await _service.GetReviewAsync(id, userId);
+        if(review is null)
+            return NotFound();
         return Ok(review);
-    } 
+    }  
 }
 

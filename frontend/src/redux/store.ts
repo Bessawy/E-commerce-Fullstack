@@ -4,10 +4,11 @@ import productReducer from "./reducers/productReducer";
 import themeReducer from "./reducers/themeModeReducer";
 import userReducer from "./reducers/userReducer";
 import cartReducer from "./reducers/cartReducer";
+import reviewReducer from "./reducers/reviewReducer";
 
 export const createStore = () => {
   return configureStore({
-    reducer: { productReducer, themeReducer, userReducer, cartReducer},
+    reducer: { productReducer, themeReducer, userReducer, cartReducer, reviewReducer},
   });
 }
 

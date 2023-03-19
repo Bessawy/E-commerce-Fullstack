@@ -101,7 +101,6 @@ export const deleteItemServer = createAsyncThunk(
           Authorization: `Bearer ${access_token}`,
         }
       });
-      dispatch(deleteItem(id));
       return response.data;
     } catch (e: any) {
       throw new Error(e.message);

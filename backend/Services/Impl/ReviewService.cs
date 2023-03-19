@@ -17,6 +17,16 @@ public class ReviewService : IReviewService
         _service = service;
     }
 
+    public async Task<Review?> GetReviewAsync(int id, string userId)
+    {
+        var user = await _service.FindUserByIdAsync(userId);
+        if(user == null)
+            return null;
+
+        await _dbContext.Entry(user).Collection(u => u.Reviews).LoadAsync();
+        return user.Reviews.FirstOrDefault(r => r.ProductId == id);
+    }
+
     public async Task<Review?> AddReviewAsync(ReviewDTO request, string userId)
     {
         var user = await _service.FindUserByIdAsync(userId);
@@ -29,7 +39,7 @@ public class ReviewService : IReviewService
             .Any(id => id == product.Id);
 
         if(doExist)
-            return null;
+            throw new Exception(@"User can't add more than one review for a product!");
 
         var review = new Review
         {
