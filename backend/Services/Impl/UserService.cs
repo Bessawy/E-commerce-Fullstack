@@ -32,8 +32,8 @@ public class UserService : IUserService
         if(!await _userManager.CheckPasswordAsync(user, request.Password))
             throw new UnauthorizedAccessException();
             
-        var role = await _userManager.GetRolesAsync(user);
-        user.Role = role[0];
+        // var role = await _userManager.GetRolesAsync(user);
+        // user.Role = role[0];
         return _tokenService.GenerateToken(user);
     }
 
@@ -59,7 +59,12 @@ public class UserService : IUserService
             Role = role
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        IdentityResult result;
+        if(request.Password == "")
+            result = await _userManager.CreateAsync(user);
+        else
+            result = await _userManager.CreateAsync(user, request.Password);
+
         var roleObj = await _roleService.FindRoleElseCreate(role);
         await _userManager.AddToRoleAsync(user, role);
 
@@ -91,5 +96,24 @@ public class UserService : IUserService
         var result = await _userManager.ChangePasswordAsync(user, 
             request.OldPassword, request.NewPassword);
         return result.Succeeded;
+    }
+
+    public async Task<UserSignInResponseDTO> GoogleLogInAsync(string email, string name)
+    {
+         // if google user is not found, add him/her to the database
+        var user = await FindUserByEmailAsync(email);
+        if(user == null)
+        {   
+            var res = await SignUpAsync(new UserSignUpRequestDTO 
+            {
+                Email = email,
+                Name = name,
+                Password = ""
+            });
+            user = res.Item1;
+        }
+        
+        // Get access token 
+        return _tokenService.GenerateToken(user!);
     }
 }  

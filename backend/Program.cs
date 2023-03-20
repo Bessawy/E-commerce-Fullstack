@@ -41,7 +41,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductSurvice, DbProductService>();
 builder.Services.AddScoped<ICategorySurvice, DbCategoryService>();
 
-// Add authentication for two JWT tokens (users, customers)
+// Add authentication for two JWT tokens (users, customers) and google auth.
 builder.Services.AddAuthentication()
 .AddJwtBearer("customers", options => 
 {
@@ -68,7 +68,13 @@ builder.Services.AddAuthentication()
         IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 builder.Configuration["Jwt_admin:Secret"])), 
     };
+})
+.AddGoogle("google", options =>
+{
+    options.ClientId = builder.Configuration["Google_Auth:ClientId"];
+    options.ClientSecret = builder.Configuration["Google_Auth:Secret"];
 });
+
 
 // Add Cetificates for Browsers to trust requests.
 builder.Services.AddAuthentication(
@@ -97,6 +103,13 @@ builder.Services.AddAuthorization(options =>
             .RequireAuthenticatedUser()
             .AddAuthenticationSchemes("customers")
             .RequireRole("customer")
+            .Build());
+
+    // used to add customer as well when override a function
+    // ----------------------Not used----------------------------
+    options.AddPolicy("google", new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .AddAuthenticationSchemes("google")
             .Build());
 });
 

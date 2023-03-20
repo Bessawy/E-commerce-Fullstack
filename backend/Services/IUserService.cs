@@ -13,4 +13,5 @@ public interface IUserService
     Task<bool> DeleteAsync(User user);
     Task<User?> UpdateUserInfoAsync(UserDTO request, User user);
     Task<bool> UpdatePasswordAsync(ChangePasswordDTO request, User user);
+    Task<UserSignInResponseDTO> GoogleLogInAsync(string email, string name);
 }

@@ -201,7 +201,7 @@ const ProductInfo = () => {
             </GridItem>
           </Grid>
           {myReview && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{marginTop: 2}}>
               <GridItem>
                 <Typography variant="h6">My Review</Typography>
               </GridItem>
