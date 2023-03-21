@@ -5,6 +5,7 @@ using Ecommerce.DTOs;
 using Ecommerce.Db;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Google.Apis.Auth;
 
 // Independant class since User model inherits from IdentityUser class
 public class UserService : IUserService
@@ -56,7 +57,8 @@ public class UserService : IUserService
             Name = request.Name,
             UserName = request.Email,
             Email = request.Email,
-            Role = role
+            Role = role,
+            Avatar = request.Avater
         };
 
         IdentityResult result;
@@ -98,21 +100,23 @@ public class UserService : IUserService
         return result.Succeeded;
     }
 
-    public async Task<UserSignInResponseDTO> GoogleLogInAsync(string email, string name)
+    public async Task<UserSignInResponseDTO> GoogleLogInAsync(GoogleJsonWebSignature.Payload payload)
     {
          // if google user is not found, add him/her to the database
-        var user = await FindUserByEmailAsync(email);
+        var user = await FindUserByEmailAsync(payload.Email);
         if(user == null)
         {   
             var res = await SignUpAsync(new UserSignUpRequestDTO 
             {
-                Email = email,
-                Name = name,
-                Password = ""
+                Email = payload.Email,
+                Name = payload.Name,
+                Password = "",
+                Avater = payload.Picture
             });
+
             user = res.Item1;
         }
-        
+
         // Get access token 
         return _tokenService.GenerateToken(user!);
     }

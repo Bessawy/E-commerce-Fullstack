@@ -14,7 +14,11 @@ public class UserSignInResponseDTO
 {
     public string Token {get; set;} = null!;
     public DateTime ExpireTime {get; set;}
+}
 
+public class GoogleDTO
+{
+    public string Credential {get; set;} = null!;
 }
 
 public class UserGoogleSignInResponseDTO : UserSignInResponseDTO

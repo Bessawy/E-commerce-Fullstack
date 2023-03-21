@@ -5,6 +5,7 @@ using Ecommerce.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Ecommerce.DTOs;
+using Google.Apis.Auth;
 
 namespace Ecommerce.Controllers;
 
@@ -23,23 +24,19 @@ public class GoogleController : ApiControllerBase
         _service = service;
     }
 
-    [Route("signin")]
-    [Authorize(Policy = "google")]
-    public async Task<ActionResult<UserSignInResponseDTO>> GoogleResponse()
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<ActionResult<UserSignInResponseDTO>> GoogleResponse(GoogleDTO request)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        if(identity == null)
-            return Unauthorized();
-        
-        // Extract user info from google authentication claim
-        var output = identity.Claims.Select(claim => new
-        {
-            name = identity.FindFirst(ClaimTypes.Name)!.Value,
-            email = identity.FindFirst(ClaimTypes.Email)!.Value
-        });
+        Console.WriteLine("dude");
+        // varify given user credentials
+        var payload = GoogleJsonWebSignature
+         .ValidateAsync(request.Credential, new GoogleJsonWebSignature.ValidationSettings()).Result;
 
-        var email = output.ToList()[0].email;
-        var name = output.ToList()[0].name;
-        return await _service.GoogleLogInAsync(email, name);;
+        if (payload is null)
+            return Unauthorized();
+
+        // return access_token
+        return await _service.GoogleLogInAsync(payload);;
     }
 }

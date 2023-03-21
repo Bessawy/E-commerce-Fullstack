@@ -12,6 +12,25 @@ export const userinttialstate: UserType = {
   avatar: "",
 };
 
+export const googleLoginServer = createAsyncThunk(
+  "googleLoginServer",
+  async (access_token: string, { dispatch }) => {
+    try {
+      const response = await axios.post(
+        "https://localhost:7191/api/v1/google/login",
+        {
+          credential: access_token
+        });
+        
+      const data = await response.data;
+      localStorage.setItem("JWT", data.token);
+      await dispatch(JWTLogin());
+    } catch (e) {
+      throw new Error("Login failed");
+    }
+  }
+);
+
 export const editUserServer = createAsyncThunk(
   "editUserServer",
   async (user: UserType) => {

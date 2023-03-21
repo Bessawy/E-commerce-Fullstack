@@ -9,11 +9,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserLogin } from "../../redux/reducers/userReducer";
+import { googleLoginServer, UserLogin } from "../../redux/reducers/userReducer";
 
 import { useAppDispatch, useAppSelector } from "../../reduxhook/hooks";
+import { FlexBox } from "../../Styles/Themes/styledComp";
+
+// Google login
+// https://livefiredev.com/in-depth-guide-sign-in-with-google-in-a-react-js-application/
 
 const UserForm = () => {
   const [email, setEmail] = useState<string>("");
@@ -26,19 +31,32 @@ const UserForm = () => {
   const user = useAppSelector((state) => state.userReducer);
 
   const signinHandler = () => {
-    setLoading(true)
+    setLoading(true);
     const login = async () => {
       await dispatch(UserLogin({ email: email, password: password })).then(
         (response) => {
-          if ("error" in response) {
-            setMessage("Error! Your email or password are not correct.");
-            setOpen(true);
-          }
-          setLoading(false)
+          if ("error" in response)
+            warnintMessage("Error! Your email or password are not correct.");
+          setLoading(false);
         }
       );
     };
     login();
+  };
+
+  const warnintMessage = (msg: string) => {
+    setMessage(msg);
+    setOpen(true);
+  };
+  const onSuccessDo = (res: CredentialResponse) => {
+    var access_token = res.credential;
+    if (access_token)
+      dispatch(googleLoginServer(access_token)).then((res) => {
+        if ("error" in res) warnintMessage("Access token not valid!.");
+      });
+    else {
+      warnintMessage("Login failed!.");
+    }
   };
 
   useEffect(() => {
@@ -61,7 +79,7 @@ const UserForm = () => {
         {" "}
         <Box className="logo_img" sx={{ width: 220, height: 50 }}></Box>
       </NavLink>
-      <Paper sx={{ marginTop: 5, maxWidth: 500}} component="form">
+      <Paper sx={{ marginTop: 5, maxWidth: 500 }} component="form">
         <Typography variant="h5" sx={{ marginTop: 3, marginLeft: 5 }}>
           {" "}
           Sign In
@@ -112,7 +130,13 @@ const UserForm = () => {
           >
             Continue
           </LoadingButton>
-          <Typography variant="caption" margin={2} color="#FF5F1F" whiteSpace={'normal'} textAlign={"center"} >
+          <Typography
+            variant="caption"
+            margin={2}
+            color="#FF5F1F"
+            whiteSpace={"normal"}
+            textAlign={"center"}
+          >
             {" "}
             By continuing, I agree to Amr’s Privacy Policy and Terms of Use.
           </Typography>
@@ -123,13 +147,7 @@ const UserForm = () => {
             {" "}
             <Typography variant="caption">New to Amr's store</Typography>{" "}
           </Divider>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <FlexBox>
             <Button
               disabled={loading}
               variant="contained"
@@ -138,10 +156,20 @@ const UserForm = () => {
             >
               Create your new account
             </Button>
-          </Box>
+          </FlexBox>
+          <FlexBox sx={{marginTop: 2}}>
+            <GoogleLogin
+              theme="filled_blue"
+              text="signin_with"
+              shape="circle"
+              onSuccess={(credentialResponse) =>
+                onSuccessDo(credentialResponse)
+              }
+              onError={() => warnintMessage("Failed to login")}
+            />
+          </FlexBox>
         </Box>
       </Paper>
-
       <Snackbar
         open={open}
         autoHideDuration={6000}
