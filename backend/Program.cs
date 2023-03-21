@@ -79,26 +79,19 @@ builder.Services.AddAuthentication(
 //Add authorization Policies
 builder.Services.AddAuthorization(options =>
 {
-    // validiate one of both as a default using customers then admins tokens
+    // Validiate one of both as a default using customers then admins tokens
     options.DefaultPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .AddAuthenticationSchemes("customers", "admins")
-        .Build();
+        .Build(); 
 
-    // validate admins
-    options.AddPolicy("admin", new AuthorizationPolicyBuilder()
-            .RequireAuthenticatedUser()
-            .AddAuthenticationSchemes("admins")
-            .RequireRole("admin")
-            .Build());
-
-    // used to add customer as well when override a function
-    // ----------------------Not used----------------------------
-    options.AddPolicy("customer", new AuthorizationPolicyBuilder()
-            .RequireAuthenticatedUser()
-            .AddAuthenticationSchemes("customers")
-            .RequireRole("customer")
-            .Build());
+    // Policy that validates only using admins token
+    options.AddPolicy("admin", policy => 
+    {
+        policy.RequireAuthenticatedUser()
+            .AddAuthenticationSchemes("admins");
+        policy.RequireRole("admin");
+    });
 });
 
 
@@ -114,6 +107,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
+    // Should be used only during development instead of Database migration.
+    // Delete and Create Db.
+    // Set Config.CreateDbAtStart to either true/false.
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetService<AppDbContext>();
