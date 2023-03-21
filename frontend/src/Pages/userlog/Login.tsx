@@ -13,7 +13,6 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { googleLoginServer, UserLogin } from "../../redux/reducers/userReducer";
-
 import { useAppDispatch, useAppSelector } from "../../reduxhook/hooks";
 import { FlexBox } from "../../Styles/Themes/styledComp";
 
@@ -36,7 +35,7 @@ const UserForm = () => {
       await dispatch(UserLogin({ email: email, password: password })).then(
         (response) => {
           if ("error" in response)
-            warnintMessage("Error! Your email or password are not correct.");
+            warningMessage("Error! Your email or password are not correct.");
           setLoading(false);
         }
       );
@@ -44,18 +43,19 @@ const UserForm = () => {
     login();
   };
 
-  const warnintMessage = (msg: string) => {
+  const warningMessage = (msg: string) => {
     setMessage(msg);
     setOpen(true);
   };
+  
   const onSuccessDo = (res: CredentialResponse) => {
     var access_token = res.credential;
     if (access_token)
       dispatch(googleLoginServer(access_token)).then((res) => {
-        if ("error" in res) warnintMessage("Access token not valid!.");
+        if ("error" in res) warningMessage("Access token not valid!.");
       });
     else {
-      warnintMessage("Login failed!.");
+      warningMessage("Login failed!.");
     }
   };
 
@@ -165,7 +165,7 @@ const UserForm = () => {
               onSuccess={(credentialResponse) =>
                 onSuccessDo(credentialResponse)
               }
-              onError={() => warnintMessage("Failed to login")}
+              onError={() => warningMessage("Failed to login")}
             />
           </FlexBox>
         </Box>

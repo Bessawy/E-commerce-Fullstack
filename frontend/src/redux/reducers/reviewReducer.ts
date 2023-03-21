@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
+
 import { getReviewsType, reviewType } from "../../Types/review";
 
 export const reviewintialstate: reviewType[] = [];
@@ -86,7 +87,6 @@ export const getAllReviewsFromServer = createAsyncThunk(
     }
   }
 )
-
 
 const reviewSlice = createSlice({
   name: "reviewSlice",
