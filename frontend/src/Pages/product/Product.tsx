@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductType } from "../../Types/product";
 import { Item } from "../../utils/product_utils";
 import { useAppDispatch } from "../../reduxhook/hooks";
-import { addtoCart } from "../../redux/reducers/cartReducer";
+import { addToCart } from "../../redux/reducers/cartReducer";
 import React from "react";
 
 const Image = (props: { img: string }) => {
@@ -94,7 +94,7 @@ const ProductItem = (props: { Item: ProductType }) => {
             variant="contained"
             color="secondary"
             onClick={() => {
-              dispatch(addtoCart(props.Item));
+              dispatch(addToCart(props.Item));
             }}
           >
             Add to Cart

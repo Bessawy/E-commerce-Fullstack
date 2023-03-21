@@ -14,7 +14,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useAppDispatch, useAppSelector } from "../../reduxhook/hooks";
-import { addtoCart, removeFromCart, deleteFromCart } from "../../redux/reducers/cartReducer";
+import { addToCart, decreaseFromCart, deleteFromCart } from "../../redux/reducers/cartReducer";
 import { FlexBox } from "../../Styles/Themes/styledComp";
 
 const Cart = () => {
@@ -57,7 +57,7 @@ const Cart = () => {
                         <FlexBox>
                           <IconButton
                             onClick={() => {
-                              dispatch(removeFromCart(index));
+                              dispatch(decreaseFromCart(index));
                             }}
                           >
                             <RemoveIcon />
@@ -65,7 +65,7 @@ const Cart = () => {
                           <Typography variant="h6"> {item.count}</Typography>
                           <IconButton
                             onClick={() => {
-                              dispatch(addtoCart(item));
+                              dispatch(addToCart(item));
                             }}
                           >
                             <AddIcon />

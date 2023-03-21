@@ -29,8 +29,7 @@ public class PasswordAttribute : ValidationAttribute
             reason += "Password must have atleat 1 lower character. ";
 
         // Password must contain atlaest one special character.
-        Regex reSymbol = new Regex("[^a-zA-Z0-9]");
-        if (!reSymbol.IsMatch(Password)) 
+        if (Password.Any(ch => !char.IsLetterOrDigit(ch)))
             reason +=  "Your new password must contain at least 1 symbol character.";
         
         if (reason == "") 

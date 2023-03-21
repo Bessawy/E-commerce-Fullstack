@@ -23,7 +23,7 @@ import "swiper/css/pagination";
 import { ProductType, ProductUpdateType } from "../../Types/product";
 import GridItem from "../../Styles/Themes/gridTheme";
 import { useAppDispatch, useAppSelector } from "../../reduxhook/hooks";
-import { addtoCart } from "../../redux/reducers/cartReducer";
+import { addToCart } from "../../redux/reducers/cartReducer";
 import ProductForm from "./ProductEditForm";
 import {
   deleteItemServer,
@@ -183,7 +183,7 @@ const ProductInfo = () => {
                   variant="contained"
                   sx={{ marginTop: 4 }}
                   onClick={(e) => {
-                    dispatch(addtoCart(product));
+                    dispatch(addToCart(product));
                   }}
                 >
                   {" "}
