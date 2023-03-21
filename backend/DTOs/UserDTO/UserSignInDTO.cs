@@ -20,8 +20,3 @@ public class GoogleDTO
 {
     public string Credential {get; set;} = null!;
 }
-
-public class UserGoogleSignInResponseDTO : UserSignInResponseDTO
-{
-    public string RedirUrl {get; set;} = null!;
-}

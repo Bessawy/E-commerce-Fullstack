@@ -1,14 +1,12 @@
 namespace Ecommerce.Controllers;
 
-using Ecommerce.Models;
 using Ecommerce.DTOs;
 using Ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 
 // Cannot inherit from CrudSurvicee as User Model can't be used as TModel.
+// Basic crud operation is not created for userIdentity Model!
 public class UserController : ApiControllerBase
 {
     private readonly IUserService _service;
@@ -25,10 +23,13 @@ public class UserController : ApiControllerBase
     public async Task<IActionResult> SignUp(UserSignUpRequestDTO request)
     {
         (var user, var result) = await _service.SignUpAsync(request);
+        
+        // Reutrn either empty Badrequest or a list of occured errors if not null!
         if(user is null && result is not null)
             return BadRequest(result.Errors.ToList());
         else if(user is null)
             return BadRequest();
+
         return Ok(UserDTO.FromUser(user));
     }
 
@@ -70,7 +71,8 @@ public class UserController : ApiControllerBase
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
             return NotFound();
-        return Ok(UserDTO.FromUser(user!));
+
+        return Ok(UserDTO.FromUser(user));
     }
 
     [HttpPost("profile/info")]
@@ -87,6 +89,7 @@ public class UserController : ApiControllerBase
         var updateUser = await _service.UpdateUserInfoAsync(request, user);
         if(updateUser is null)
             return BadRequest();
+            
         return Ok(UserDTO.FromUser(updateUser));
     }
 

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class DbProductService : DbCrudService<Product, ProductDTO>, IProductSurvice
 {
+    
     public DbProductService(AppDbContext context) : base(context)
     {
     }

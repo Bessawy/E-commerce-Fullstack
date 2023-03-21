@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 public class ReviewService : IReviewService
 {
-
     private readonly AppDbContext _dbContext;
     private readonly IUserService _service;
 
@@ -68,12 +67,16 @@ public class ReviewService : IReviewService
             return false;
 
         await _dbContext.Entry(review).Reference(r => r.Product).LoadAsync();
+        
+        // Multiply by -1 to remove product!
         UpdateProductRating(review.Product, -1 * review.Product.Rating);
         user.Reviews.Remove(review);
         await _dbContext.SaveChangesAsync();
         return true;
     }
 
+    // To add rating: newRating must be a positive value [1, 5].
+    // To remove rating: newRating must be a negative value [-5, -1]
     public void UpdateProductRating(Product product, double newRating)
     {
         product.Rating = (product.Rating * product.NumberOfReviews) + newRating;

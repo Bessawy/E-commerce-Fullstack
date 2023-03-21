@@ -32,7 +32,8 @@ public class UserService : IUserService
 
         if(!await _userManager.CheckPasswordAsync(user, request.Password))
             throw new UnauthorizedAccessException();
-            
+        
+        //-----------------TODO--Remove-Comments------------------
         // var role = await _userManager.GetRolesAsync(user);
         // user.Role = role[0];
         return _tokenService.GenerateToken(user);
@@ -62,6 +63,8 @@ public class UserService : IUserService
         };
 
         IdentityResult result;
+        // If password is empty string - create account with no password!
+        // No password accounts are mainly used for external logins (ex. Google).
         if(request.Password == "")
             result = await _userManager.CreateAsync(user);
         else
@@ -117,7 +120,6 @@ public class UserService : IUserService
             user = res.Item1;
         }
 
-        // Get access token 
         return _tokenService.GenerateToken(user!);
     }
 }  

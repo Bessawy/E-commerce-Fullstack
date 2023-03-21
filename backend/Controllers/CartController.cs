@@ -9,7 +9,6 @@ namespace Ecommerce.Controllers;
 [Route("api/v1/my-cart")]
 public class CartController : ApiControllerBase
 {
-
     private readonly ICartService _service;
     private readonly ILogger<CartController> _logger;
 

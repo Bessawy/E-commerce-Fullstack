@@ -43,7 +43,9 @@ public class CartService : ICartService
         var cartItem = res.Value.cartItem;
         var user = res.Value.user;
         var product = res.Value.product;
-    
+
+        // If cartItem not found create a new one, 
+        // else add to the count!
         if(cartItem is null)
         {
             cartItem = new CartItem
@@ -82,6 +84,8 @@ public class CartService : ICartService
         }
         else
         {
+            // Reduce the number of items or remove it completely if the count
+            // is less than zero.
             if(cartItem.Count - request.Count > 1)
             {
                 cartItem.Count -= request.Count;

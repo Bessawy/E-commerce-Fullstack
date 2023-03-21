@@ -10,7 +10,6 @@ namespace Ecommerce.Controllers;
 [Route("api/v1/my-reviews")]
 public class ReviewController : ApiControllerBase
 {
-
     private readonly IReviewService _service;
     private readonly ILogger<ReviewService> _logger;
 
@@ -49,6 +48,8 @@ public class ReviewController : ApiControllerBase
         }
         catch(Exception e)
         {
+            // Exception invoked when user tries to create multiple reviews 
+            // for the same product!
             return BadRequest(e.Message);
         }
     }

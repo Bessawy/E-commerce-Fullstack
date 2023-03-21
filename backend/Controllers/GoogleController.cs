@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Ecommerce.Models;
 using Ecommerce.Services;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 using Ecommerce.DTOs;
 using Google.Apis.Auth;
 
@@ -22,21 +21,23 @@ public class GoogleController : ApiControllerBase
         _logger = logger;
         _signInManage = signInManager;
         _service = service;
-    }
+    }  
 
+    // Allow user to login in with his/her google credentials.
+    // If user email does not exist, create an accout and return the token,
+    // otherwise, simply return the token!
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<UserSignInResponseDTO>> GoogleResponse(GoogleDTO request)
     {
-        Console.WriteLine("dude");
-        // varify given user credentials
+        // varify given user credentials by sending the received token to the google server!
         var payload = GoogleJsonWebSignature
          .ValidateAsync(request.Credential, new GoogleJsonWebSignature.ValidationSettings()).Result;
 
         if (payload is null)
             return Unauthorized();
 
-        // return access_token
+        // return the access_token for the given user payload.
         return await _service.GoogleLogInAsync(payload);;
     }
 }
