@@ -53,7 +53,7 @@ Create an e-commerce website using [ https://fakeapi.platzi.com/ ]( https://fake
 
 ## Deloyed Link
 
-[https://frontend-project-bessawy.vercel.app ](https://frontend-project-bessawy.vercel.app)
+[https://ecommerce-app-six-delta.vercel.app](https://frontend-project-bessawy.vercel.app)
 
 ## Steps to run the Code
 
