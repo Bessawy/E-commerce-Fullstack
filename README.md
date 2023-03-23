@@ -17,6 +17,8 @@
 
 * This readme file only talk about back-end server. More details about front-end can be found in the readme at the frontend file.
 
+* Access the ecommerce-app through [https://ecommerce-app-six-delta.vercel.app/].
+
 ## Setting Up `Backend Server`
 
 1. This project uses `.Net core 6` - congifure dependencies based on version used.
