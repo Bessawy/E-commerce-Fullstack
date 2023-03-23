@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import Config from "./../../config.json"
+
 import { CreateUserType, UserPasswordType, UserType } from "../../Types/user";
 
 export const userinttialstate: UserType = {
@@ -17,7 +19,7 @@ export const googleLoginServer = createAsyncThunk(
   async (access_token: string, { dispatch }) => {
     try {
       const response = await axios.post(
-        "https://localhost:7191/api/v1/google/login",
+        `https://${Config.AzureServer}/api/v1/google/login`,
         {
           credential: access_token
         });
@@ -37,7 +39,7 @@ export const editUserServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.post(
-        "https://localhost:7191/api/v1/users/profile/info",
+        `https://${Config.AzureServer}/api/v1/users/profile/info`,
         {
           email: user.email,
           name: user.name,
@@ -63,7 +65,7 @@ export const changePasswordServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.post(
-        "https://localhost:7191/api/v1/users/profile/password",
+        `https://${Config.AzureServer}/api/v1/users/profile/password`,
         {
           oldpassword: passwords.oldpassword,
           newpassword: passwords.newpassword,
@@ -87,7 +89,7 @@ export const createUser = createAsyncThunk(
   async (user: CreateUserType) => {
     try {
       const response = await axios.post(
-        "https://localhost:7191/api/v1/users/signup",
+        `https://${Config.AzureServer}/api/v1/users/signup`,
         user
       );
 
@@ -108,7 +110,7 @@ export const JWTLogin = createAsyncThunk("tokenLogin", async () => {
     }
 
     const userResponse = await axios.get(
-      "https://localhost:7191/api/v1/users/profile",
+      `https://${Config.AzureServer}/api/v1/users/profile`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -127,7 +129,7 @@ export const UserLogin = createAsyncThunk(
   async (user: { email: string; password: string }, { dispatch }) => {
     try {
       const response = await axios.post(
-        "https://localhost:7191/api/v1/users/signin",
+        `https://${Config.AzureServer}/api/v1/users/signin`,
         user
       );
       const data = await response.data;

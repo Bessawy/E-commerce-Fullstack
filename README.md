@@ -137,6 +137,12 @@ Entities, Relationships, Database
     * Admin tokens used to:
 
         - Delete a product/category.
+
+## Deployment
+
+The backend project has been deploy on Azure Web servers. The host names is: `amrecommerceapp`.
+- `Note: ` swagger only work during development and cann't be viewed on the deployment server.
+
     
 ## FileStructure
 
@@ -144,7 +150,7 @@ Project Layers:
 
     * Models & DTOs.
     * Controllers -> Services -> Database.
-    * Repositories is not used since the logic in services is simple and thus another layer that handles database quries separately is not need.
+    * Repositories is not used since the logic in services is simple and thus another layer that handles database quries separately is not used.
 
 ```
 C:.

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosResponse } from "axios";
 
+import Config from "./../../config.json"
+
 import {
   ModifyProductType,
   ProductCreateType,
@@ -12,7 +14,7 @@ const intialstate: ProductType[] = [];
 export const fetchAllProduct = createAsyncThunk("fetchProducts", async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7191/api/v1/products"
+      `https://${Config.AzureServer}/api/v1/products`
     );
     const data: ProductType[]|Error = await response.data;
     return data;
@@ -26,7 +28,7 @@ export const fetchSingleProduct = createAsyncThunk(
   async (id: number) => {
     try {
       const response = await axios.get(
-        "https://localhost:7191/api/v1/products/" + id
+        `https://${Config.AzureServer}/api/v1/products/` + id
       );
       const data = await response.data;
       return data;
@@ -42,7 +44,7 @@ export const addProductServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response: AxiosResponse<ProductType, ProductType> =
-        await axios.post("https://localhost:7191/api/v1/products", {
+        await axios.post(`https://${Config.AzureServer}/api/v1/products`, {
           title: product.title,
           price: product.price,
           description: product.description,
@@ -68,7 +70,7 @@ export const updateItemServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.put(
-        "https://localhost:7191/api/v1/products/" + Item.id,
+        `https://${Config.AzureServer}/api/v1/products/` + Item.id,
         {
           title: Item.title,
           price: Item.price,
@@ -95,7 +97,7 @@ export const deleteItemServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.delete(
-        "https://localhost:7191/api/v1/products/" + id,
+        `https://${Config.AzureServer}/api/v1/products/` + id,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,

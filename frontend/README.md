@@ -22,19 +22,22 @@ Create an e-commerce website using [ https://fakeapi.platzi.com/ ]( https://fake
 ## Features
 
 - Fetch all/single products.
+- Filter product by title.
 - Sort products by price and title.
-- Update/delete products. 
+- Update/delete products (admin account only). 
 - User login/logout and register.
-- Update User profile.
+- User google login.
+- Update User profile & password.
 - Add product to cart and remove product from cart.
 - Includes feature to switch between dark/light themes.
+- Add and remove Reviews for products.
 - Testing unit for the reducers.
 - Responsive for small display (designed for both laptop and mobile display (400 x 600)).
 
 ## Login in as admin
 
-`email`: admin@mail.com
-`password`: admin123
+`email`: Admin@mail.com
+`password`: Admin@123
 
 ## Website Pages
 
@@ -45,6 +48,7 @@ Create an e-commerce website using [ https://fakeapi.platzi.com/ ]( https://fake
 - `/signin` and `/signout`: allow users to login in or register a new account.
 - `/createproduct`: allow any user to create a new product "even Guest users for now".
 - `/profile`: view user profile. This route can only be accessed when user is logged in.
+- `/profile/password` : allow user to change password.
 - `/*`: Not found page
 
 ## Deloyed Link

@@ -3,7 +3,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { RouterProvider } from "react-router-dom";
 import "./Styles/app.scss";
-
 import { useAppDispatch, useAppSelector } from "./reduxhook/hooks";
 import { fetchAllProduct } from "./redux/reducers/productReducer";
 import { darkTheme } from "./Styles/Themes/darkTheme";

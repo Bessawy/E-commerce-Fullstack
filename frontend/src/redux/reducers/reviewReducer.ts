@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 
+import Config from "./../../config.json"
+
 import { getReviewsType, reviewType } from "../../Types/review";
 
 export const reviewintialstate: reviewType[] = [];
@@ -11,7 +13,7 @@ export const addReviewToServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.post(
-        "https://localhost:7191/api/v1/my-reviews",
+        `https://${Config.AzureServer}/api/v1/my-reviews`,
         {
           rate: review.rate,
           productid: review.productid,
@@ -37,7 +39,7 @@ export const getUserReviewServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.get(
-        "https://localhost:7191/api/v1/my-reviews/" + id,
+        `https://${Config.AzureServer}/api/v1/my-reviews/` + id,
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
@@ -58,7 +60,7 @@ export const deleteUserReviewServer = createAsyncThunk(
     try {
       const access_token = localStorage.getItem("JWT");
       const response = await axios.delete(
-        "https://localhost:7191/api/v1/my-reviews/" + id,
+        `https://${Config.AzureServer}/api/v1/my-reviews/` + id,
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
@@ -78,7 +80,7 @@ export const getAllReviewsFromServer = createAsyncThunk(
   async (req: getReviewsType) => {
     try {
       const response = await axios.get(
-        `https://localhost:7191/api/v1/products/${req.productid}/reviews?offset=${req.offset}&limit=${req.limit}`
+        `https://${Config.AzureServer}/api/v1/products/${req.productid}/reviews?offset=${req.offset}&limit=${req.limit}`
       );
       const data: reviewType[] = response.data;
       return data
