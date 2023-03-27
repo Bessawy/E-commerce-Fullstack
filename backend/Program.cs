@@ -7,6 +7,8 @@ using Ecommerce.Models;
 using Ecommerce.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Certificate;
+using Azure.Security.KeyVault.Certificates;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,10 +73,17 @@ builder.Services.AddAuthentication()
     };
 });
 
-// Add Cetificates for Browsers to trust requests.
-builder.Services.AddAuthentication(
-        CertificateAuthenticationDefaults.AuthenticationScheme)
-    .AddCertificate();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors", 
+        builder =>
+    {
+        builder.WithOrigins("https://amrecommerceapp.azurewebsites.net", "https://ecommerce-app-six-delta.vercel.app")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .SetIsOriginAllowedToAllowWildcardSubdomains();
+    });
+});
 
 //Add authorization Policies
 builder.Services.AddAuthorization(options =>
@@ -123,6 +132,8 @@ if (app.Environment.IsDevelopment())
         }
     }  
 }
+
+app.UseCors("cors");
 
 app.UseHttpsRedirection();
 
