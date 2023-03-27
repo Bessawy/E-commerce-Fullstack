@@ -17,9 +17,7 @@
 
 * This readme file only talk about back-end server. More details about front-end can be found in the readme at the frontend file.
 
-* Access the ecommerce-app through [https://ecommerce-app-six-delta.vercel.app/]. `NOTE`: `THE APP CAN ONLY BE USED WHEN YOU DISABLE SECURITY ON YOUR BROWSER.` 
-    - on windows: Press window-key + R (open Run)
-    - type: `chrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security`
+* Access the ecommerce-app through [https://ecommerce-app-six-delta.vercel.app/].
 
 ## Setting Up `Backend Server`
 
