@@ -2,6 +2,7 @@ using Ecommerce.DTOs;
 using Ecommerce.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ecommerce.Models;
 
 namespace Ecommerce.Controllers;
 
@@ -25,15 +26,20 @@ public class CartController : ApiControllerBase
         if(userId is null)
             return Unauthorized();
 
-        var carItem = await _service.AddProductToCartAsync(request, userId);
-        if(carItem is null)
-            return NotFound();
-
-        return new CartDTO
+        CartItem carItem;
+        try
         {
-            ProductId = carItem.ProductId,
-            Count = carItem.Count
-        };
+            carItem = await _service.AddProductToCartAsync(request, userId);
+            return new CartDTO
+            {
+                ProductId = carItem.ProductId,
+                Count = carItem.Count
+            };
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpPost("remove-item")]
@@ -43,15 +49,23 @@ public class CartController : ApiControllerBase
         if(userId is null)
             return Unauthorized();
 
-        var carItem = await _service.RemoveProductFromCartAsync(request, userId);
-        if(carItem is null)
-            return NotFound();
-
-        return new CartDTO
+        CartItem? carItem;
+        try
         {
-            ProductId = carItem.ProductId,
-            Count = carItem.Count
-        };
+            carItem = await _service.RemoveProductFromCartAsync(request, userId);
+            if(carItem is null)
+                return NotFound("cart item not found!");
+            
+            return new CartDTO
+            {
+                ProductId = carItem.ProductId,
+                Count = carItem.Count
+            };
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpGet]
@@ -64,7 +78,7 @@ public class CartController : ApiControllerBase
 
         var items = await _service.GetItemsInCartAsync(userId);
         if(items is null)
-            return NotFound();
+            return NotFound("user nor found!");
         return Ok(items);
     }
 }

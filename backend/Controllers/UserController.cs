@@ -28,7 +28,7 @@ public class UserController : ApiControllerBase
         if(user is null && result is not null)
             return BadRequest(result.Errors.ToList());
         else if(user is null)
-            return BadRequest();
+            return BadRequest("Couldn't add user to database!");
 
         return Ok(UserDTO.FromUser(user));
     }
@@ -70,7 +70,7 @@ public class UserController : ApiControllerBase
         
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return NotFound();
+            return NotFound("couldn't find userId!");
 
         return Ok(UserDTO.FromUser(user));
     }
@@ -84,11 +84,11 @@ public class UserController : ApiControllerBase
         
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return NotFound();
+            return NotFound("couldn't find userId!");
 
         var updateUser = await _service.UpdateUserInfoAsync(request, user);
         if(updateUser is null)
-            return BadRequest();
+            return BadRequest("couldn't update user in the database!");
             
         return Ok(UserDTO.FromUser(updateUser));
     }
@@ -102,7 +102,7 @@ public class UserController : ApiControllerBase
         
         var user = await _service.FindUserByIdAsync(userId);
         if(user is null)
-            return NotFound();
+            return NotFound("couldn't find userId!");
 
         var updateUser = await _service.UpdatePasswordAsync(request, user);
         if(updateUser)

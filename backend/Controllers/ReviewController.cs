@@ -42,14 +42,12 @@ public class ReviewController : ApiControllerBase
         try
         {
             var review = await _service.AddReviewAsync(request, userId);
-            if(review is null)
-                return BadRequest();
             return Ok(review);
         }
         catch(Exception e)
         {
             // Exception invoked when user tries to create multiple reviews 
-            // for the same product!
+            // for the same products
             return BadRequest(e.Message);
         }
     }
@@ -63,7 +61,7 @@ public class ReviewController : ApiControllerBase
 
         var review = await _service.GetReviewAsync(id, userId);
         if(review is null)
-            return NotFound();
+            return NotFound("review for the product {id} not found!");
         return Ok(review);
     }  
 }

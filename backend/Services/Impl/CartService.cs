@@ -32,17 +32,14 @@ public class CartService : ICartService
     }
 
     // Allow user to Add item to his/her Cart.
-    public async Task<CartItem?> AddProductToCartAsync(CartDTO request, string userId)
+    public async Task<CartItem> AddProductToCartAsync(CartDTO request, string userId)
     {
-        (CartItem? cartItem, User user, Product product)? res 
+        (CartItem? cartItem, User user, Product product) res 
             = await GetCartItemAsync(request, userId);
 
-        if(res == null)
-            return null;
-
-        var cartItem = res.Value.cartItem;
-        var user = res.Value.user;
-        var product = res.Value.product;
+        var cartItem = res.cartItem;
+        var user = res.user;
+        var product = res.product;
 
         // If cartItem not found create a new one, 
         // else add to the count!
@@ -68,15 +65,12 @@ public class CartService : ICartService
     // Allow user to remove item from his/her Cart.
     public async Task<CartItem?> RemoveProductFromCartAsync(CartDTO request, string userId)
     {
-        (CartItem? cartItem, User user, Product product)? res 
+        (CartItem? cartItem, User user, Product product) res 
             = await GetCartItemAsync(request, userId);
 
-        if(res == null)
-            return null;
-
-        var cartItem = res.Value.cartItem;
-        var user = res.Value.user;
-        var product = res.Value.product;
+        var cartItem = res.cartItem;
+        var user = res.user;
+        var product = res.product;
 
         if(cartItem is null)
         {
@@ -102,13 +96,15 @@ public class CartService : ICartService
     }
 
     // Returns user, product and their corresponding CartItem if exist.
-    public async Task<(CartItem?, User, Product)?> GetCartItemAsync(CartDTO request, string userId)
+    public async Task<(CartItem?, User, Product)> GetCartItemAsync(CartDTO request, string userId)
     {
         var user = await _service.FindUserByIdAsync(userId);
         var product = await _dbContext.Products.FindAsync(request.ProductId);
 
-        if(product == null || user == null)
-            return null;
+        if(product == null)
+            throw new Exception("product not found!");
+        else if(user == null)
+            throw new Exception("user not found!");
 
         await _dbContext.Entry(user).Collection(u => u.Carts).LoadAsync();
         var cartItem = user.Carts.SingleOrDefault(c => c.ProductId == product.Id);

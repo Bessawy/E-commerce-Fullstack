@@ -135,6 +135,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("cors");
 
+app.UseCors();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

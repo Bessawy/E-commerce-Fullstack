@@ -38,6 +38,6 @@ public class GoogleController : ApiControllerBase
             return Unauthorized();
 
         // return the access_token for the given user payload.
-        return await _service.GoogleLogInAsync(payload);;
+        return await _service.GoogleLogInAsync(payload);
     }
 }

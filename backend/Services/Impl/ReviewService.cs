@@ -30,8 +30,10 @@ public class ReviewService : IReviewService
     {
         var user = await _service.FindUserByIdAsync(userId);
         var product = await _dbContext.Products.FindAsync(request.ProductId);
-        if(user == null || product == null)
-            return null;
+        if(user == null)
+            throw new Exception("user not found!");
+        else if(product == null)
+            throw new Exception("product not found");
 
         await _dbContext.Entry(user).Collection(u => u.Reviews).LoadAsync();
         bool doExist = user.Reviews.Select(r => r.ProductId)

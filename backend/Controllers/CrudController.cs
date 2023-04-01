@@ -28,7 +28,7 @@ public abstract class CrudController<TModel, TDTo> : ApiControllerBase
     {
         var item = await _service.GetAsync(id);
         if(item == null)
-            return NotFound("Item not found!");
+            return NotFound("Item with the given id not found!");
         return Ok(item);
     }
 
@@ -37,7 +37,7 @@ public abstract class CrudController<TModel, TDTo> : ApiControllerBase
     {
         var item = await _service.CreateAsync(request);
         if(item == null)
-            return BadRequest();
+            return BadRequest("Couldn't add item to the database!");
         return Ok(item);
     }
 
@@ -55,7 +55,7 @@ public abstract class CrudController<TModel, TDTo> : ApiControllerBase
     {
         var item = await _service.UpdateAsync(id, request);
         if(item == null)
-            return NotFound("Item not found!");
+            return NotFound("Item with the given id not found!");
         else 
             return Ok(item);
     }
